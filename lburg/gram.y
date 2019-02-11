@@ -175,6 +175,9 @@ int yylex(void) {
 			bp--;
 			yylval.n = n;
 			return INT;
+		} else if (c == '/' && *bp == '/') {
+			while(*bp != '\n')
+				bp++;
 		} else if (isalpha(c)) {
 			char *p = bp - 1;
 			while (isalpha(*bp) || isdigit(*bp) || *bp == '_')
