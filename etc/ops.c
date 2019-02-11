@@ -7,7 +7,7 @@
 static char rcsid[] = "$Id$";
 
 static char list[] = { 'c', 's', 'i', 'l', 'h', 'f', 'd', 'x', 'p', 0 };
-static int sizes[] = {  1,   2,   4,   4,   8,   4,   8,  16,   8 };
+static int sizes[] = {  1,   2,   4,   4,   4,   4,   8,  16,   4 };
 
 static int doop(int op, int type, const char *sz, const char *opname) {
 	int count = 0;
@@ -16,10 +16,11 @@ static int doop(int op, int type, const char *sz, const char *opname) {
 	if (op == LOAD)
 		return 0;
 	if (last != 0 && last != op)
-		printf("\n");
+		//printf("\n");
 	last = op;
 	if (type == B || type == V) {
-		printf(" %s=%d", opname, op + type);
+		printf("%s=%d", opname, op + type);
+		printf("\n");
 		count++;
 	} else {
 		int i, done = 0;
@@ -27,13 +28,14 @@ static int doop(int op, int type, const char *sz, const char *opname) {
 		for (i = 0; sz[i] != '\0' && (s = strchr(list, sz[i])) != NULL; i++) {
 			int n = sizes[s-list];
 			if ((done&(1<<n)) == 0) {
-				printf(" %s%d=%d", opname, n, op + type + sizeop(n));
+				printf("%s%d=%d", opname, n, op + type + sizeop(n));
+				printf("\n");
 				count++;
 			}
 			done |= 1<<n;
 		}
 	}
-	printf("\n");
+	//printf("\n");
 	return count;
 }
 
