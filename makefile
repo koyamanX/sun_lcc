@@ -16,6 +16,10 @@ include $(CUSTOM)
 B=$(BUILDDIR)/
 T=$(TSTDIR)/
 
+HOSTFILE=etc/linux.c
+BUILDDIR=./build
+
+
 what:
 	-@echo make all rcc lburg cpp lcc bprint liblcc triple clean clobber
 

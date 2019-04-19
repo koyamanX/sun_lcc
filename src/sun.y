@@ -295,7 +295,7 @@ addr: ADDRFP4 "%a+%F(sp)"
 	// address of local 
 addr: ADDRLP4 "%a+%F(sp)"
 	// load address to register
-reg: addr "lda r%c,%0\n"
+reg: acon "ldh r%c,hi(%0)\nldl r%c,lo(%0)\n"
 
 	// constant zero
 reg: CNSTI1 "# reg\n" range(a, 0, 0)
@@ -340,9 +340,9 @@ reg: DIVU4(reg,con14)  "divu r%c,%1(r%0)\n"  1
 reg: MULI4(reg,con14)  "mul r%c,%1(r%0)\n"   1
 reg: MULU4(reg,con14)  "mul r%c,%1(r%0)\n"   1
 
-reg: ADDI4(reg,con14)   "addu r%c,%1(r%0)\n"  1
-reg: ADDP4(reg,con14)   "addu r%c,%1(r%0)\n"  1
-reg: ADDU4(reg,con14)   "addu r%c,%1(r%0)\n"  1
+reg: ADDI4(reg,con14)   "add r%c,%1(r%0)\n"  1
+reg: ADDP4(reg,con14)   "add r%c,%1(r%0)\n"  1
+reg: ADDU4(reg,con14)   "add r%c,%1(r%0)\n"  1
 reg: BANDI4(reg,con14)  "and r%c,%1(r%0)\n"   1
 reg: BORI4(reg,con14)   "or r%c,%1(r%0)\n"    1
 reg: BXORI4(reg,con14)  "xor r%c,%1(r%0)\n"   1
@@ -363,9 +363,9 @@ reg: DIVU4(reg,reg)  "divu r%c,r%0,r%1\n"  1
 reg: MULI4(reg,reg)  "mul r%c,r%0,r%1\n"   1
 reg: MULU4(reg,reg)  "mul r%c,r%0,r%1\n"   1
 
-reg: ADDI4(reg,reg)   "addu r%c,r%0,r%1\n"  1
-reg: ADDP4(reg,reg)   "addu r%c,r%0,r%1\n"  1
-reg: ADDU4(reg,reg)   "addu r%c,r%0,r%1\n"  1
+reg: ADDI4(reg,reg)   "add r%c,r%0,r%1\n"  1
+reg: ADDP4(reg,reg)   "add r%c,r%0,r%1\n"  1
+reg: ADDU4(reg,reg)   "add r%c,r%0,r%1\n"  1
 reg: BANDI4(reg,reg)  "and r%c,r%0,r%1\n"   1
 reg: BORI4(reg,reg)   "or r%c,r%0,r%1\n"    1
 reg: BXORI4(reg,reg)  "xor r%c,r%0,r%1\n"   1
@@ -399,22 +399,22 @@ reg: CVII4(reg)  "sll r%c,%0,8*(4-%a); sra r%c,r%c,8*(4-%a)\n"  2
 reg: CVUI4(reg)  "and r%c,%0,(1<<(8*%a))-1\n"  1
 reg: CVUU4(reg)  "and r%c,%0,(1<<(8*%a))-1\n"  1
 
-stmt: LABELV  "@%a:\n"
-stmt: JUMPV(acon)  "b @%0\n"   1
+stmt: LABELV  "%a:\n"
+stmt: JUMPV(acon)  "b %0\n"   1
 //stmt: JUMPV(reg)   ".cpadd r%0\nj r%0\n"	 1
 stmt: JUMPV(reg)   "b 0(%0)\n"  			 1
-stmt: EQI4(reg,reg)  "cmp r%0,r%1\nbeq @%a\n"   2
-stmt: EQU4(reg,reg)  "cmp r%0,r%1\nbeq @%a\n"   2
-stmt: GEI4(reg,reg)  "cmp r%0,r%1\nbge @%a\n"   2
-stmt: GEU4(reg,reg)  "cmp r%0,r%1\nbuge @%a\n"  2
-stmt: GTI4(reg,reg)  "cmp r%0,r%1\nbgt @%a\n"   2
-stmt: GTU4(reg,reg)  "cmp r%0,r%1\nbugt @%a\n"  2
-stmt: LEI4(reg,reg)  "cmp r%0,r%1\nble @%a\n"   2
-stmt: LEU4(reg,reg)  "cmp r%0,r%1\nbule @%a\n"  2
-stmt: LTI4(reg,reg)  "cmp r%0,r%1\nblt @%a\n"   2
-stmt: LTU4(reg,reg)  "cmp r%0,r%1\nbult @%a\n"  2
-stmt: NEI4(reg,reg)  "cmp r%0,r%1\nbne @%a\n"   2
-stmt: NEU4(reg,reg)  "cmp r%0,r%1\nbne @%a\n"   2
+stmt: EQI4(reg,reg)  "cmp r%0,r%1\nbeq %a\n"   2
+stmt: EQU4(reg,reg)  "cmp r%0,r%1\nbeq %a\n"   2
+stmt: GEI4(reg,reg)  "cmp r%0,r%1\nbge %a\n"   2
+stmt: GEU4(reg,reg)  "cmp r%0,r%1\nbuge %a\n"  2
+stmt: GTI4(reg,reg)  "cmp r%0,r%1\nbgt %a\n"   2
+stmt: GTU4(reg,reg)  "cmp r%0,r%1\nbugt %a\n"  2
+stmt: LEI4(reg,reg)  "cmp r%0,r%1\nble %a\n"   2
+stmt: LEU4(reg,reg)  "cmp r%0,r%1\nbule %a\n"  2
+stmt: LTI4(reg,reg)  "cmp r%0,r%1\nblt %a\n"   2
+stmt: LTU4(reg,reg)  "cmp r%0,r%1\nbult %a\n"  2
+stmt: NEI4(reg,reg)  "cmp r%0,r%1\nbne %a\n"   2
+stmt: NEU4(reg,reg)  "cmp r%0,r%1\nbne %a\n"   2
 
 
 stmt: RETI4(reg)  "# ret\n"  1
@@ -429,10 +429,10 @@ stmt: ARGB(INDIRB(reg))       "# argb %0\n"      1
 stmt: ASGNB(reg,INDIRB(reg))  "# asgnb %0 %1\n"  1
 
 	// call must be label !!
-reg:  CALLI4(ar)  "call @%0\n"  1
-reg:  CALLP4(ar)  "call @%0\n"  1
-reg:  CALLU4(ar)  "call @%0\n"  1
-stmt: CALLV(ar)   "call @%0\n"  1
+reg:  CALLI4(ar)  "call %0\n"  1
+reg:  CALLP4(ar)  "call %0\n"  1
+reg:  CALLU4(ar)  "call %0\n"  1
+stmt: CALLV(ar)   "call %0\n"  1
 ar: ADDRGP4 "%a"
 ar: addr "%0"
 //ar: CNSTP4 "%a" range(a, 0, 0x0ffffffff)
@@ -534,7 +534,7 @@ static void global(Symbol p)
 			print(".data\n");
 		else if (p->u.seg == DATA)
 		{
-			print(".sdata\n");
+			print(".\n");
 		}
 		print(".align %c\n", ".01.2...3"[p->type->align]);
 		print("%s:\n", p->x.name);
@@ -591,10 +591,10 @@ static void segment(int n)
 {
 	cseg = n;
 	switch (n) {
-		case CODE: print(".segment text\n");  break;
-		case BSS: print(".segment bss\n");  break;
+		case CODE: print(".text\n");  break;
+		case BSS: print(".section .bss\n");  break;
 		case LIT:
-		case DATA:  print(".segment data\n"); break;
+		case DATA:  print(".data\n"); break;
 	}
 }
 
@@ -724,15 +724,15 @@ static void blkloop(int dreg, int doff, int sreg, int soff, int size, int tmps[]
 {
 	int lab = genlabel(1);
 
-	print("addu r%d,%d(%s)\n", sreg, size&~7, sreg);
-	print("addu r%d,%d(%s)\n", tmps[2], size&~7, dreg);
+	print("add r%d,%d(%s)\n", sreg, size&~7, sreg);
+	print("add r%d,%d(%s)\n", tmps[2], size&~7, dreg);
 	blkcopy(tmps[2], doff, sreg, soff, size&7, tmps);
-	print("@_%d\n", lab);
-	print("addu r%d,%d(%s)\n", sreg, -8, sreg);
-	print("addu r%d,%d(%s)\n", tmps[2], -8, tmps[2]);
+	print("_%d\n", lab);
+	print("add r%d,%d(%s)\n", sreg, -8, sreg);
+	print("add r%d,%d(%s)\n", tmps[2], -8, tmps[2]);
 	blkcopy(tmps[2], doff, sreg, soff, 8, tmps);
 	print("cmp r%d, r%d\n", dreg, tmps[2]);
-	print("bult @_%d\n", lab);
+	print("bult _%d\n", lab);
 }
 
 
@@ -987,10 +987,10 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	framesize = roundup(maxargoffset + sizeisave + maxoffset, 20);
 
 	print(".align 2\n");
-	print(".ent %s\n", f->x.name);
-	print("@%s:\n", f->x.name);
+	//print(".ent %s\n", f->x.name);
+	print("%s:\n", f->x.name);
 	if (framesize > 0)
-			print("addu sp,%d(sp)\n", -framesize);
+			print("add sp,%d(sp)\n", -framesize);
 
         saved = maxargoffset;
 	for (i = 0; i <= 31; i++)
@@ -1055,9 +1055,9 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
        
 
 	if (framesize > 0)
-		print("addu sp,%d(sp)\n", framesize);
+		print("add sp,%d(sp)\n", framesize);
 	print("ret\n");
-	print(".end %s\n", f->x.name);
+	//print(".end %s\n", f->x.name);
 }
 
 
