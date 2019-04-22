@@ -534,7 +534,7 @@ static void global(Symbol p)
 			print(".data\n");
 		else if (p->u.seg == DATA)
 		{
-			print(".\n");
+			print(".data\n");
 		}
 		print(".align %c\n", ".01.2...3"[p->type->align]);
 		print("%s:\n", p->x.name);
