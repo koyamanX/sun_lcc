@@ -295,7 +295,7 @@ addr: ADDRFP4 "%a+%F(sp)"
 	// address of local 
 addr: ADDRLP4 "%a+%F(sp)"
 	// load address to register
-reg: acon "ldh r%c,hi(%0)\nldl r%c, r%c, lo(%0)\n"
+reg: addr "ldh r%c,hi(%0)\nldl r%c, r%c, lo(%0)\n"
 
 	// constant zero
 reg: CNSTI1 "# reg\n" range(a, 0, 0)
