@@ -4,14 +4,7 @@
 
 static char rcsid[] = "$Id$";
 
-#ifndef LCCDIR
-#define LCCDIR "/home/chihiro/usr/local/lcc/bin/"
-#endif
-
 #define CPPDIR "/bin/"
-#define TOOLDIR "/home/chihiro/usr/local/sun32-unknown-elf/bin/"
-#define LDDIR TOOLDIR
-#define ASDIR TOOLDIR
 
 char *suffixes[] = { ".c", ".i", ".s", ".o", ".out", 0 };
 char inputs[256] = "";
@@ -20,11 +13,11 @@ char *cpp[] = { CPPDIR "cpp",
 	"", "", "",
 	"", "", "", "-D__signed__=signed",
 	"$1", "$2", "$3", 0 };
-char *include[] = {"-I" LCCDIR, 0 };
-char *com[] = {LCCDIR "rcc", "-target=sun", "$1", "$2", "$3", 0 };
-char *as[] = { TOOLDIR "as", "-o", "$3", "$1", "$2", 0 };
+char *include[] = {"-I./", 0 };
+char *com[] = {"./rcc", "-target=sun", "$1", "$2", "$3", 0 };
+char *as[] = {"./as", "-o", "$3", "$1", "$2", 0 };
 char *ld[] = {
-	/*  0 */ TOOLDIR "ld", "", "", "-static",
+	/*  0 */ "./ld", "", "", "-static",
 	/*  4 */ "", "-o", "$3",
 	/*  7 */ "", "",
 	/*  9 */ "", 
