@@ -308,13 +308,13 @@ reg: CNSTP4 "# reg\n" range(a, 0, 0)
 
 	//stmt is operator with side effect
 	//assignment 
-stmt: ASGNI1(addr, reg) "sb r%1, %0\n" 1
-stmt: ASGNI2(addr, reg) "sh r%1, %0\n" 1
-stmt: ASGNI4(addr, reg) "sw r%1, %0\n" 1
-stmt: ASGNU1(addr, reg) "sb r%1, %0\n" 1
-stmt: ASGNU2(addr, reg) "sh r%1, %0\n" 1
-stmt: ASGNU4(addr, reg) "sw r%1, %0\n" 1
-stmt: ASGNP4(addr, reg) "sw r%1, %0\n" 1
+stmt: ASGNI1(reg, reg) "sb r%1, #0x0(r%0)\n" 1
+stmt: ASGNI2(reg, reg) "sh r%1, #0x0(r%0)\n" 1
+stmt: ASGNI4(reg, reg) "sw r%1, #0x0(r%0)\n" 1
+stmt: ASGNU1(reg, reg) "sb r%1, #0x0(r%0)\n" 1
+stmt: ASGNU2(reg, reg) "sh r%1, #0x0(r%0)\n" 1
+stmt: ASGNU4(reg, reg) "sw r%1, #0x0(r%0)\n" 1
+stmt: ASGNP4(reg, reg) "sw r%1, #0x0(r%0)\n" 1
 
 reg:  INDIRI1(addr)     "lb r%c,%0\n"  1
 reg:  INDIRU1(addr)     "lbu r%c,%0\n"  1
