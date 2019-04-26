@@ -295,7 +295,8 @@ addr: ADDRFP4 "%a+%F(sp)"
 	// address of local 
 addr: ADDRLP4 "%a+%F(sp)"
 	// load address to register
-reg: addr "ldh r%c,hi(%0)\nldl r%c, r%c, lo(%0)\n"
+reg: acon "ldh r%c,hi(%0)\nldl r%c,r%c,lo(%0)\n"
+reg: addr "add r%c,#%0\n"
 
 	// constant zero
 reg: CNSTI1 "# reg\n" range(a, 0, 0)
@@ -308,55 +309,55 @@ reg: CNSTP4 "# reg\n" range(a, 0, 0)
 
 	//stmt is operator with side effect
 	//assignment 
-stmt: ASGNI1(addr, reg) "sb r%1, %0\n" 1
-stmt: ASGNI2(addr, reg) "sh r%1, %0\n" 1
-stmt: ASGNI4(addr, reg) "sw r%1, %0\n" 1
-stmt: ASGNU1(addr, reg) "sb r%1, %0\n" 1
-stmt: ASGNU2(addr, reg) "sh r%1, %0\n" 1
-stmt: ASGNU4(addr, reg) "sw r%1, %0\n" 1
-stmt: ASGNP4(addr, reg) "sw r%1, %0\n" 1
+stmt: ASGNI1(reg, reg) "sb r%1,#0x0(r%0)\n" 1
+stmt: ASGNI2(reg, reg) "sh r%1,#0x0(r%0)\n" 1
+stmt: ASGNI4(reg, reg) "sw r%1,#0x0(r%0)\n" 1
+stmt: ASGNU1(reg, reg) "sb r%1,#0x0(r%0)\n" 1
+stmt: ASGNU2(reg, reg) "sh r%1,#0x0(r%0)\n" 1
+stmt: ASGNU4(reg, reg) "sw r%1,#0x0(r%0)\n" 1
+stmt: ASGNP4(reg, reg) "sw r%1,#0x0(r%0)\n" 1
 
-reg:  INDIRI1(addr)     "lb r%c,%0\n"  1
-reg:  INDIRU1(addr)     "lbu r%c,%0\n"  1
-reg:  INDIRI2(addr)     "lh r%c,%0\n"  1
-reg:  INDIRU2(addr)     "lhu r%c,%0\n"  1
-reg:  INDIRI4(addr)     "lw r%c,%0\n"  1
-reg:  INDIRU4(addr)     "lw r%c,%0\n"  1
-reg:  INDIRP4(addr)     "lw r%c,%0\n"  1
+reg:  INDIRI1(addr)     "lb r%c,#%0\n"  1
+reg:  INDIRU1(addr)     "lbu r%c,#%0\n"  1
+reg:  INDIRI2(addr)     "lh r%c,#%0\n"  1
+reg:  INDIRU2(addr)     "lhu r%c,#%0\n"  1
+reg:  INDIRI4(addr)     "lw r%c,#%0\n"  1
+reg:  INDIRU4(addr)     "lw r%c,#%0\n"  1
+reg:  INDIRP4(addr)     "lw r%c,#%0\n"  1
 
-reg:  CVII4(INDIRI1(addr))     "lb r%c,%0\n"  1
-reg:  CVII4(INDIRI2(addr))     "lh r%c,%0\n"  1
-reg:  CVUU4(INDIRU1(addr))     "lbu r%c,%0\n"  1
-reg:  CVUU4(INDIRU2(addr))     "lhu r%c,%0\n"  1
-reg:  CVUI4(INDIRU1(addr))     "lbu r%c,%0\n"  1
-reg:  CVUI4(INDIRU2(addr))     "lhu r%c,%0\n"  1
+reg:  CVII4(INDIRI1(addr))     "lb r%c,#%0\n"  1
+reg:  CVII4(INDIRI2(addr))     "lh r%c,#%0\n"  1
+reg:  CVUU4(INDIRU1(addr))     "lbu r%c,#%0\n"  1
+reg:  CVUU4(INDIRU2(addr))     "lhu r%c,#%0\n"  1
+reg:  CVUI4(INDIRU1(addr))     "lbu r%c,#%0\n"  1
+reg:  CVUI4(INDIRU2(addr))     "lhu r%c,#%0\n"  1
 
 	// register or constant 14bit for itype
 con14: CNSTU4 "%a" range(a,-8192, 8191)
 con14: CNSTU4 "%a" range(a, 0, 16383)
 
-reg: DIVI4(reg,con14)  "div r%c,%1(r%0)\n"   1
-reg: DIVU4(reg,con14)  "divu r%c,%1(r%0)\n"  1
-reg: MULI4(reg,con14)  "mul r%c,%1(r%0)\n"   1
-reg: MULU4(reg,con14)  "mul r%c,%1(r%0)\n"   1
+reg: DIVI4(reg,con14)  "div r%c,#%1(r%0)\n"   1
+reg: DIVU4(reg,con14)  "divu r%c,#%1(r%0)\n"  1
+reg: MULI4(reg,con14)  "mul r%c,#%1(r%0)\n"   1
+reg: MULU4(reg,con14)  "mul r%c,#%1(r%0)\n"   1
 
-reg: ADDI4(reg,con14)   "add r%c,%1(r%0)\n"  1
-reg: ADDP4(reg,con14)   "add r%c,%1(r%0)\n"  1
-reg: ADDU4(reg,con14)   "add r%c,%1(r%0)\n"  1
-reg: BANDI4(reg,con14)  "and r%c,%1(r%0)\n"   1
-reg: BORI4(reg,con14)   "or r%c,%1(r%0)\n"    1
-reg: BXORI4(reg,con14)  "xor r%c,%1(r%0)\n"   1
-reg: BANDU4(reg,con14)  "and r%c,%1(r%0)\n"   1
-reg: BORU4(reg,con14)   "or r%c,%1(r%0)\n"    1
-reg: BXORU4(reg,con14)  "xor r%c,%1(r%0)\n"   1
-reg: SUBI4(reg,con14)   "sub r%c,%1(r%0)\n"  1
-reg: SUBP4(reg,con14)   "sub r%c,%1(r%0)\n"  1
-reg: SUBU4(reg,con14)   "sub r%c,%1(r%0)\n"  1
+reg: ADDI4(reg,con14)   "add r%c,#%1(r%0)\n"  1
+reg: ADDP4(reg,con14)   "add r%c,#%1(r%0)\n"  1
+reg: ADDU4(reg,con14)   "add r%c,#%1(r%0)\n"  1
+reg: BANDI4(reg,con14)  "and r%c,#%1(r%0)\n"   1
+reg: BORI4(reg,con14)   "or r%c,#%1(r%0)\n"    1
+reg: BXORI4(reg,con14)  "xor r%c,#%1(r%0)\n"   1
+reg: BANDU4(reg,con14)  "and r%c,#%1(r%0)\n"   1
+reg: BORU4(reg,con14)   "or r%c,#%1(r%0)\n"    1
+reg: BXORU4(reg,con14)  "xor r%c,#%1(r%0)\n"   1
+reg: SUBI4(reg,con14)   "sub r%c,#%1(r%0)\n"  1
+reg: SUBP4(reg,con14)   "sub r%c,#%1(r%0)\n"  1
+reg: SUBU4(reg,con14)   "sub r%c,#%1(r%0)\n"  1
 
-reg: LSHI4(reg,con14)  "sll r%c,%1(r%0)\n"  1
-reg: LSHU4(reg,con14)  "sll r%c,%1(r%0)\n"  1
-reg: RSHI4(reg,con14)  "sra r%c,%1(r%0)\n"  1
-reg: RSHU4(reg,con14)  "srl r%c,%1(r%0)\n"  1
+reg: LSHI4(reg,con14)  "sll r%c,#%1(r%0)\n"  1
+reg: LSHU4(reg,con14)  "sll r%c,#%1(r%0)\n"  1
+reg: RSHI4(reg,con14)  "sra r%c,#%1(r%0)\n"  1
+reg: RSHU4(reg,con14)  "srl r%c,#%1(r%0)\n"  1
 
 reg: DIVI4(reg,reg)  "div r%c,r%0,r%1\n"   1
 reg: DIVU4(reg,reg)  "divu r%c,r%0,r%1\n"  1
@@ -395,9 +396,9 @@ reg: LOADU4(reg)  "add r%c,0(r%0)\n"  move(a)
 
 
 	//imm feild is not supported by assmbler
-reg: CVII4(reg)  "sll r%c,%0,8*(4-%a); sra r%c,r%c,8*(4-%a)\n"  2
-reg: CVUI4(reg)  "and r%c,%0,(1<<(8*%a))-1\n"  1
-reg: CVUU4(reg)  "and r%c,%0,(1<<(8*%a))-1\n"  1
+reg: CVII4(reg)  "sll r%c,%0,#8*(4-%a) sra r%c,r%c,#8*(4-%a)\n"  2
+reg: CVUI4(reg)  "and r%c,%0,#(1<<(8*%a))-1\n"  1
+reg: CVUU4(reg)  "and r%c,%0,#(1<<(8*%a))-1\n"  1
 
 stmt: LABELV  "%a:\n"
 stmt: JUMPV(acon)  "b %0\n"   1
@@ -679,15 +680,15 @@ static void blkfetch(int size, int off, int reg, int tmp)
 		regstr = stringf("r%d", reg);
 
 	if(size == 1)
-		print("lbu r%d, %d(%s)\n", tmp, off, regstr);
+		print("lbu r%d,#%d(%s)\n", tmp, off, regstr);
 	else if(salign >= size && size == 2)
-		print("lhu r%d, %d(%s)\n", tmp, off, regstr);
+		print("lhu r%d,#%d(%s)\n", tmp, off, regstr);
 	else if(salign >= size)
-		print("lw r%d, %d(%s)\n", tmp, off, regstr);
+		print("lw r%d,#%d(%s)\n", tmp, off, regstr);
 	else if(size == 2)
-		print("lhu r%d, %d(%s)\n", tmp, off, regstr);
+		print("lhu r%d,#%d(%s)\n", tmp, off, regstr);
 	else
-		print("lw r%d, %d(%s)\n", tmp, off, regstr);
+		print("lw r%d,#%d(%s)\n", tmp, off, regstr);
 }
 
 /*
@@ -702,15 +703,15 @@ static void blkstore(int size, int off, int reg, int tmp)
 	else
 		regstr = stringf("r%d", reg);
 	if(size == 1)
-		print("sb r%d,%d(%s)\n", tmp, off, regstr);
+		print("sb r%d,#%d(%s)\n", tmp, off, regstr);
 	else if(dalign >= size && size == 2)
-		print("sh r%d, %d(%s)\n", tmp, off, regstr);
+		print("sh r%d,#%d(%s)\n", tmp, off, regstr);
 	else if(dalign >= size)
-		print("sw r%d, %d(%s)\n", tmp, off, regstr);
+		print("sw r%d,#%d(%s)\n", tmp, off, regstr);
 	else if(size == 2)
-		print("sh r%d, %d(%s)\n", tmp, off, regstr);
+		print("sh r%d,#%d(%s)\n", tmp, off, regstr);
 	else
-		print("sw r%d, %d(%s)\n", tmp, off, regstr);
+		print("sw r%d,#%d(%s)\n", tmp, off, regstr);
 
 }
 
@@ -724,12 +725,12 @@ static void blkloop(int dreg, int doff, int sreg, int soff, int size, int tmps[]
 {
 	int lab = genlabel(1);
 
-	print("add r%d,%d(%s)\n", sreg, size&~7, sreg);
-	print("add r%d,%d(%s)\n", tmps[2], size&~7, dreg);
+	print("add r%d,#%d(%s)\n", sreg, size&~7, sreg);
+	print("add r%d,#%d(%s)\n", tmps[2], size&~7, dreg);
 	blkcopy(tmps[2], doff, sreg, soff, size&7, tmps);
 	print("_%d\n", lab);
-	print("add r%d,%d(%s)\n", sreg, -8, sreg);
-	print("add r%d,%d(%s)\n", tmps[2], -8, tmps[2]);
+	print("add r%d,#%d(%s)\n", sreg, -8, sreg);
+	print("add r%d,#%d(%s)\n", tmps[2], -8, tmps[2]);
 	blkcopy(tmps[2], doff, sreg, soff, 8, tmps);
 	print("cmp r%d, r%d\n", dreg, tmps[2]);
 	print("bult _%d\n", lab);
@@ -782,7 +783,7 @@ static void emit2(Node p)
 			q = argreg(p->x.argno, p->syms[2]->u.c.v.i, ty, sz, ty0);
 			src = getregnum(p->x.kids[0]);
 			if(q == NULL)
-				print("sw r%d, %d(sp)\n", src, p->syms[2]->u.c.v.i);
+				print("sw r%d,#%d(sp)\n", src, p->syms[2]->u.c.v.i);
 			break;
 		case ASGN+B:
 			dalign = salign = p->syms[1]->u.c.v.i;
@@ -797,7 +798,7 @@ static void emit2(Node p)
 			n = p->syms[2]->u.c.v.i + p->syms[0]->u.c.v.i;
 			dst = p->syms[2]->u.c.v.i;
 			for(; dst <= 12 && dst < n; dst += 4)
-				print("lw r%d, %d(sp)\n", (dst/4)+4, dst);
+				print("lw r%d,#%d(sp)\n", (dst/4)+4, dst);
 			break;	
 	}
 }
@@ -990,13 +991,13 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	//print(".ent %s\n", f->x.name);
 	print("%s:\n", f->x.name);
 	if (framesize > 0)
-			print("add sp,%d(sp)\n", -framesize);
+			print("add sp,#%d(sp)\n", -framesize);
 
         saved = maxargoffset;
 	for (i = 0; i <= 31; i++)
 		if (usedmask[IREG]&(1<<i)) {
 			printf(";save registers \n");
-			print("sw r%d,%d(sp)\n", i, saved);
+			print("sw r%d,#%d(sp)\n", i, saved);
 			saved += 4;
 		}
 
@@ -1016,7 +1017,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 			if(out->sclass == REGISTER && (isint(out->type) || out->type == in->type))
 			{
 				int outn = out->x.regnode->number;
-				print("add r%d, 0(r%d)\n", outn, rn);	
+				print("add r%d,#0(r%d)\n", outn, rn);	
 			}
 			else
 			{
@@ -1024,7 +1025,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 				int i;
 				int n = (in->type->size + 3) / 4;
 				for(i = rn; i < rn+ n && i <= 7; i++)
-					print("sw r%d, r%d(sp)\n", i, off+(i-rn)*4);
+					print("sw r%d,#%d(sp)\n", i, off+(i-rn)*4);
 			}
 		}
 	}
@@ -1033,7 +1034,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	{
 		i = callee[i-1]->x.offset + callee[i-1]->type->size;
 		for(i = roundup(i,4)/4; i <= 3; i++)
-			print("sw r%d, %d(sp)\n", i+4, framesize+4*i);
+			print("sw r%d,#%d(sp)\n", i+4, framesize+4*i);
 	}
 
 
@@ -1049,13 +1050,13 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	for (i = 0; i <= 31; i++)
 		if (usedmask[IREG]&(1<<i)) {
 			printf(";restore registers \n");
-			print("lw r%d,%d(sp)\n", i, saved);
+			print("lw r%d,#%d(sp)\n", i, saved);
 			saved += 4;
 		}
        
 
 	if (framesize > 0)
-		print("add sp,%d(sp)\n", framesize);
+		print("add sp,#%d(sp)\n", framesize);
 	print("ret\n");
 	//print(".end %s\n", f->x.name);
 }
