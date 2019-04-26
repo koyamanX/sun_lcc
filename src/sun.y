@@ -435,7 +435,7 @@ reg:  CALLP4(ar)  "call %0\n"  1
 reg:  CALLU4(ar)  "call %0\n"  1
 stmt: CALLV(ar)   "call %0\n"  1
 ar: ADDRGP4 "%a"
-ar: addr "%0"
+//ar: addr "%0"
 //ar: CNSTP4 "%a" range(a, 0, 0x0ffffffff)
 %%
 
