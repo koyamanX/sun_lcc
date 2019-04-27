@@ -5,6 +5,10 @@
 static char rcsid[] = "$Id$";
 
 #define CPPDIR "/bin/"
+#define BINUTILSDIR "/opt/sun32-toolchain/binutils/bin"
+#define LCCDIR "/opt/sun32-toolchain/lcc"
+#define LIBDIR "/opt/sun32-toolchain/lib"
+#define INCDIR "/opt/sun32-toolchain/include"
 
 char *suffixes[] = { ".c", ".i", ".s", ".o", ".out", 0 };
 char inputs[256] = "";
@@ -13,11 +17,11 @@ char *cpp[] = { CPPDIR "cpp",
 	"", "", "",
 	"", "", "", "-D__signed__=signed",
 	"$1", "$2", "$3", 0 };
-char *include[] = {"-I./", 0 };
-char *com[] = {"rcc", "-target=sun", "$1", "$2", "$3", 0 };
-char *as[] = {"as", "-o", "$3", "$1", "$2", 0 };
+char *include[] = {"-I"INCDIR, 0 };
+char *com[] = {LCCDIR"/rcc", "-target=sun", "$1", "$2", "$3", 0 };
+char *as[] = {BINUTILSDIR"/as", "-o", "$3", "$1", "$2", 0 };
 char *ld[] = {
-	/*  0 */ "ld", "", "", "-static",
+	/*  0 */ BINUTILSDIR"/ld", "", "", "-static",
 	/*  4 */ "", "-o", "$3",
 	/*  7 */ "", "",
 	/*  9 */ "", 
