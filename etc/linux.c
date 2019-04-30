@@ -4,7 +4,8 @@
 
 static char rcsid[] = "$Id$";
 
-#define CPPDIR LCCDIR"/"PREFIX"/"
+//#define CPPDIR LCCDIR"/"PREFIX"/"
+#define CPPDIR "/bin/"
 #define BINUTILSDIR "/opt/sun32-toolchain/binutils/bin"
 #define LCCDIR "/opt/sun32-toolchain/lcc/bin"
 #define LIBDIR "/opt/sun32-toolchain/lib"
