@@ -283,9 +283,9 @@ acon: con "%0"
 acon: ADDRGP4 "%a"
 
 	// address of memory access instruction (addr) 
-addr: ADDI4(reg,acon) "%1(r%0)"
-addr: ADDU4(reg,acon) "%1(r%0)"
-addr: ADDP4(reg,acon) "%1(r%0)"
+addr: ADDI4(reg,con) "%1(r%0)"
+addr: ADDU4(reg,con) "%1(r%0)"
+addr: ADDP4(reg,con) "%1(r%0)"
 addr: acon "%0"
 	//0+reg
 addr: reg "0(r%0)"
