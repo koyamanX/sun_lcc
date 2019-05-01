@@ -404,18 +404,18 @@ stmt: LABELV  "%a:\n"
 stmt: JUMPV(acon)  "b %0\n"   1
 //stmt: JUMPV(reg)   ".cpadd r%0\nj r%0\n"	 1
 stmt: JUMPV(reg)   "b 0(%0)\n"  			 1
-stmt: EQI4(reg,reg)  "cmp r%0,#0x0(r%1)\nbeq %a\n"   2
-stmt: EQU4(reg,reg)  "cmp r%0,#0x0(r%1)\nbeq %a\n"   2
-stmt: GEI4(reg,reg)  "cmp r%0,#0x0(r%1)\nbge %a\n"   2
-stmt: GEU4(reg,reg)  "cmp r%0,#0x0(r%1)\nbuge %a\n"  2
-stmt: GTI4(reg,reg)  "cmp r%0,#0x0(r%1)\nbgt %a\n"   2
-stmt: GTU4(reg,reg)  "cmp r%0,#0x0(r%1)\nbugt %a\n"  2
-stmt: LEI4(reg,reg)  "cmp r%0,#0x0(r%1)\nble %a\n"   2
-stmt: LEU4(reg,reg)  "cmp r%0,#0x0(r%1)\nbule %a\n"  2
-stmt: LTI4(reg,reg)  "cmp r%0,#0x0(r%1)\nblt %a\n"   2
-stmt: LTU4(reg,reg)  "cmp r%0,#0x0(r%1)\nbult %a\n"  2
-stmt: NEI4(reg,reg)  "cmp r%0,#0x0(r%1)\nbne %a\n"   2
-stmt: NEU4(reg,reg)  "cmp r%0,#0x0(r%1)\nbne %a\n"   2
+stmt: EQI4(reg,reg)  "cmp r0,r%0,r%1\nbeq %a\n"   2
+stmt: EQU4(reg,reg)  "cmp r0,r%0,r%1\nbeq %a\n"   2
+stmt: GEI4(reg,reg)  "cmp r0,r%0,r%1\nbge %a\n"   2
+stmt: GEU4(reg,reg)  "cmp r0,r%0,r%1\nbuge %a\n"  2
+stmt: GTI4(reg,reg)  "cmp r0,r%0,r%1\nbgt %a\n"   2
+stmt: GTU4(reg,reg)  "cmp r0,r%0,r%1\nbugt %a\n"  2
+stmt: LEI4(reg,reg)  "cmp r0,r%0,r%1\nble %a\n"   2
+stmt: LEU4(reg,reg)  "cmp r0,r%0,r%1\nbule %a\n"  2
+stmt: LTI4(reg,reg)  "cmp r0,r%0,r%1\nblt %a\n"   2
+stmt: LTU4(reg,reg)  "cmp r0,r%0,r%1\nbult %a\n"  2
+stmt: NEI4(reg,reg)  "cmp r0,r%0,r%1\nbne %a\n"   2
+stmt: NEU4(reg,reg)  "cmp r0,r%0,r%1\nbne %a\n"   2
 
 
 stmt: RETI4(reg)  "# ret\n"  1
