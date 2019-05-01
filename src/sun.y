@@ -382,9 +382,10 @@ reg: LSHU4(reg,reg)  "sll r%c,r%0,r%1\n"  1
 reg: RSHI4(reg,reg)  "sra r%c,r%0,r%1\n"  1
 reg: RSHU4(reg,reg)  "srl r%c,r%0,r%1\n"  1
 
-reg: BCOMI4(reg)  "not r%c,%0\n"   1
-reg: BCOMU4(reg)  "not r%c,%0\n"   1
-reg: NEGI4(reg)   "not r%c,%0\n"  1
+	// not instruction -> xor with imm of 7fff
+reg: BCOMI4(reg)  "xor r%c, #0x7fff(r%0)\n"   1
+reg: BCOMU4(reg)  "xor r%c, #0x7fff(r%0)\n"   1
+reg: NEGI4(reg)   "xor r%c, #0x7fff(r%0)\n"  1
 
 reg: LOADI1(reg)  "add r%c,0(r%0)\n"  move(a)
 reg: LOADU1(reg)  "add r%c,0(r%0)\n"  move(a)
