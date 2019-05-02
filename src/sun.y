@@ -533,7 +533,8 @@ static void global(Symbol p)
 		{
 			print(".data\n");
 		}
-		print(".align %c\n", ".01.2...3"[p->type->align]);
+		//print(".align %c\n", ".01.2...3"[p->type->align]);
+		print(".align %c\n", '4');
 		print("%s:\n", p->x.name);
 	}
 
@@ -593,6 +594,7 @@ static void segment(int n)
 		case LIT:
 		case DATA:  print(".data\n"); break;
 	}
+	print(".align %c\n", '4');
 }
 
 /*
@@ -983,7 +985,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	sizeisave = 4*bitcount(usedmask[IREG]);
 	framesize = roundup(maxargoffset + sizeisave + maxoffset, 20);
 
-	print(".align 2\n");
+	print(".align 4\n");
 	//print(".ent %s\n", f->x.name);
 	print("%s:\n", f->x.name);
 	if (framesize > 0)
