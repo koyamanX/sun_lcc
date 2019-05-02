@@ -333,8 +333,10 @@ con14: CNSTU4 "%a" range(a, 0, 16383)
 
 reg: DIVI4(reg,con14)  "div r%c,#%1(r%0)\n"   1
 reg: DIVU4(reg,con14)  "divu r%c,#%1(r%0)\n"  1
-reg: MULI4(reg,con14)  "mul r%c,#%1(r%0)\n"   1
-reg: MULU4(reg,con14)  "mul r%c,#%1(r%0)\n"   1
+reg: MODI4(reg,reg)  "rem r%c,r%0,r%1\n"   1
+reg: MODU4(reg,reg)  "remu r%c,r%0,r%1\n"  1
+reg: MULI4(reg,con14)  "mult r%c,#%1(r%0)\n"   1
+reg: MULU4(reg,con14)  "mult r%c,#%1(r%0)\n"   1
 
 reg: ADDI4(reg,con14)   "add r%c,#%1(r%0)\n"  1
 reg: ADDP4(reg,con14)   "add r%c,#%1(r%0)\n"  1
