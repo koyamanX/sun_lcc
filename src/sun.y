@@ -1074,7 +1074,7 @@ Interface sunIR = {
         8, 8, 1,  /* long double */
         4, 4, 0,  /* T * */
         0, 1, 0,  /* struct */
-        1,      /* little_endian */
+        0,      /* little_endian */
 	/* if 1 no hardware support for mult and div */
         0,  /* mulops_calls */ 
 	/* function with return type of struct? */
