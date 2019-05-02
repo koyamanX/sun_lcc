@@ -451,7 +451,6 @@ static void progbeg(int argc, char *argv[])
 	}
 	/* change name for stack pointer(sp) */
 	ireg[30]->x.name = "sp";
-	ireg[29]->x.name = "gp";
 	iregw = mkwildcard(ireg);
 	/* variable and temporary register mask */
 	tmask[IREG] = INTTMP;
