@@ -276,27 +276,22 @@ con: CNSTP4 "%a"
 stmt: reg ""
 	// ---- ----- 
 
-	// %a for p->syms[0]->x.name, %F size of frame 
-	// address constant (acon) 
-acon: con "%0"
 	// address of global (label)
-acon: ADDRGP4 "%a"
+lab: ADDRGP4 "%a"
+reg: lab "ldh r%c,hi(%0)\nldl r%c,r%c,lo(%0)\n" 1
+reg: con "ldh r%c,hi(%0)\nldl r%c,r%c,lo(%0)\n" 1
 
-	// address of memory access instruction (addr) 
-addr: ADDI4(reg,con) "%1(r%0)"
-addr: ADDU4(reg,con) "%1(r%0)"
-addr: ADDP4(reg,con) "%1(r%0)"
-addr: acon "%0"
 	//0+reg
 addr: reg "0(r%0)"
+	// %a for p->syms[0]->x.name, %F size of frame 
 	// add constant offset to stack pointer 
 	// address of formal
 addr: ADDRFP4 "%a+%F(sp)"
 	// address of local 
 addr: ADDRLP4 "%a+%F(sp)"
 	// load address to register
-reg: acon "ldh r%c,hi(%0)\nldl r%c,r%c,lo(%0)\n"
-reg: addr "add r%c,#%0\n"
+reg: ADDRFP4 "add r%c,%a+%F(sp)\n" 1
+reg: ADDRLP4 "add r%c,%a+%F(sp)\n" 1
 
 	// constant zero
 reg: CNSTI1 "# reg\n" range(a, 0, 0)
@@ -309,13 +304,13 @@ reg: CNSTP4 "# reg\n" range(a, 0, 0)
 
 	//stmt is operator with side effect
 	//assignment 
-stmt: ASGNI1(reg, reg) "sb r%1,#0x0(r%0)\n" 1
-stmt: ASGNI2(reg, reg) "sh r%1,#0x0(r%0)\n" 1
-stmt: ASGNI4(reg, reg) "sw r%1,#0x0(r%0)\n" 1
-stmt: ASGNU1(reg, reg) "sb r%1,#0x0(r%0)\n" 1
-stmt: ASGNU2(reg, reg) "sh r%1,#0x0(r%0)\n" 1
-stmt: ASGNU4(reg, reg) "sw r%1,#0x0(r%0)\n" 1
-stmt: ASGNP4(reg, reg) "sw r%1,#0x0(r%0)\n" 1
+stmt: ASGNI1(addr,reg) "sb r%1,%0\n" 1
+stmt: ASGNI2(addr,reg) "sh r%1,%0\n" 1
+stmt: ASGNI4(addr,reg) "sw r%1,%0\n" 1
+stmt: ASGNU1(addr,reg) "sb r%1,%0\n" 1
+stmt: ASGNU2(addr,reg) "sh r%1,%0\n" 1
+stmt: ASGNU4(addr,reg) "sw r%1,%0\n" 1
+stmt: ASGNP4(addr,reg) "sw r%1,%0\n" 1
 
 reg:  INDIRI1(addr)     "lb r%c,#%0\n"  1
 reg:  INDIRU1(addr)     "lbu r%c,#%0\n"  1
@@ -402,7 +397,7 @@ reg: CVUI4(reg)  "and r%c,r%0,#(1<<(8*%a))-1\n"  1
 reg: CVUU4(reg)  "and r%c,r%0,#(1<<(8*%a))-1\n"  1
 
 stmt: LABELV  "%a:\n"
-stmt: JUMPV(acon)  "b %0\n"   1
+stmt: JUMPV(lab)  "b %0\n"   1
 //stmt: JUMPV(reg)   ".cpadd r%0\nj r%0\n"	 1
 stmt: JUMPV(reg)   "b 0(%0)\n"  			 1
 stmt: EQI4(reg,reg)  "cmp r0,r%0,r%1\nbeq %a\n"   2
