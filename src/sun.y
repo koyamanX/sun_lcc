@@ -602,7 +602,7 @@ static void segment(int n)
 */
 static void defaddress(Symbol p) 
 {
-	print(".word %s\n", p->x.name);
+	print(".int %s\n", p->x.name);
 }
 
 /*
