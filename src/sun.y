@@ -358,8 +358,8 @@ reg: RSHU4(reg,con14)  "srl r%c,#%1(r%0)\n"  1
 
 reg: DIVI4(reg,reg)  "div r%c,r%0,r%1\n"   1
 reg: DIVU4(reg,reg)  "divu r%c,r%0,r%1\n"  1
-reg: MULI4(reg,reg)  "mul r%c,r%0,r%1\n"   1
-reg: MULU4(reg,reg)  "mul r%c,r%0,r%1\n"   1
+reg: MULI4(reg,reg)  "mult r%c,r%0,r%1\n"   1
+reg: MULU4(reg,reg)  "mult r%c,r%0,r%1\n"   1
 
 reg: ADDI4(reg,reg)   "add r%c,r%0,r%1\n"  1
 reg: ADDP4(reg,reg)   "add r%c,r%0,r%1\n"  1
