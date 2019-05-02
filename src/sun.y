@@ -622,13 +622,13 @@ static void defaddress(Symbol p)
 static void defconst(int suffix, int size, Value v) 
 {
 	if (suffix == P)
-		print(".word 0x%x\n", (unsigned)v.p);
+		print(".int 0x%x\n", (unsigned)v.p);
 	else if (size == 1)
 		print(".byte 0x%x\n", (unsigned)((unsigned char)(suffix == I ? v.i : v.u)));
 	else if (size == 2)
 		print(".half 0x%x\n", (unsigned)((unsigned short)(suffix == I ? v.i : v.u)));
 	else if (size == 4)
-		print(".word 0x%x\n", (unsigned)(suffix == I ? v.i : v.u));
+		print(".int 0x%x\n", (unsigned)(suffix == I ? v.i : v.u));
 }
 
 /*
