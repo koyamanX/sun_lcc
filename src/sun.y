@@ -977,7 +977,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 		/* if routine calls another, return address register is used*/
 		usedmask[IREG] |= ((unsigned)1)<<31;
 	
-	usedmask[IREG] &= (INTVAR&0xe8000000);
+	usedmask[IREG] &= (INTVAR|0xe8000000);
 
 	/* prologue */
 	maxargoffset = roundup(maxargoffset, 4);
