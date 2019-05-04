@@ -831,9 +831,11 @@ static Symbol argreg(int argno, int offset, int ty, int sz, int ty0)
 /* argno is number of calls in routine */
 {
 	assert((offset&3) == 0);
-	if(offset > 16)
+	if(offset > 20)
+		/* should be in stack */
 		return NULL;
 	else 
+		/* assign r20 - r25 */
 		return ireg[(offset/4) + 20];
 }
 
@@ -905,7 +907,7 @@ static void clobber(Node p)
 static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls) 
 /* call to announce each new function */
 {
-	int i, saved, sizefsave, sizeisave, varargs;
+	int i, saved, sizeisave, varargs;
 	Symbol r, argregs[5];
 
 	/* clear register state */
@@ -931,7 +933,8 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 		p->x.name = q->x.name = stringd(offset);
 		r = argreg(i, offset, optype(ttob(q->type)), q->type->size, optype(ttob(caller[0]->type)));
 
-		if(i < 5)
+		/* first 6 argument fits in register */
+		if(i < 6)
 			argregs[i] = r;
 		offset = roundup(offset + q->type->size, 4);
 		
@@ -977,22 +980,23 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 		/* if routine calls another, return address register is used*/
 		usedmask[IREG] |= ((unsigned)1)<<31;
 	
-	usedmask[IREG] &= (INTVAR|0xe8000000);
+	/* INTVAR + sp */
+	usedmask[IREG] &= (INTVAR|0x40000000);
 
 	/* prologue */
 	maxargoffset = roundup(maxargoffset, 4);
-	if (ncalls && maxargoffset < 20)
-		maxargoffset = 20;
+	if (ncalls && maxargoffset < 16)
+		maxargoffset = 24;
 	sizeisave = 4*bitcount(usedmask[IREG]);
-	framesize = roundup(maxargoffset + sizeisave + maxoffset, 20);
+	framesize = roundup(maxargoffset + sizeisave + maxoffset, 16);
 
 	print(".align 4\n");
 	//print(".ent %s\n", f->x.name);
 	print("%s:\n", f->x.name);
 	if (framesize > 0)
-			print("add sp,#%d(sp)\n", -framesize);
+		print("add sp,#%d(sp)\n", -framesize);
 
-        saved = maxargoffset;
+	saved = maxargoffset;
 	for (i = 0; i <= 31; i++)
 		if (usedmask[IREG]&(1<<i)) {
 			printf(";save registers \n");
@@ -1000,7 +1004,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 			saved += 4;
 		}
 
-	for(i = 0; i < 4 && callee[i]; i++)
+	for(i = 0; i < 6 && callee[i]; i++)
 	{
 		r = argregs[i];
 		if(r && r->x.regnode != callee[i]->x.regnode)
@@ -1023,7 +1027,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 				int off = in->x.offset + framesize;
 				int i;
 				int n = (in->type->size + 3) / 4;
-				for(i = rn; i < rn+ n && i <= 7; i++)
+				for(i = rn; i < rn+ n; i++)
 					print("sw r%d,#%d(sp)\n", i, off+(i-rn)*4);
 			}
 		}
@@ -1032,8 +1036,8 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	if(varargs && callee[i-1])
 	{
 		i = callee[i-1]->x.offset + callee[i-1]->type->size;
-		for(i = roundup(i,4)/4; i <= 3; i++)
-			print("sw r%d,#%d(sp)\n", i+4, framesize+4*i);
+		for(i = roundup(i,4)/4; i < 6; i++)
+			print("sw r%d,#%d(sp)\n", i+20, framesize+4*i);
 	}
 
 
