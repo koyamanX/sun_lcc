@@ -908,7 +908,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 /* call to announce each new function */
 {
 	int i, saved, sizeisave, varargs;
-	Symbol r, argregs[5];
+	Symbol r, argregs[6];
 
 	/* clear register state */
 	usedmask[0] = usedmask[1] = 0;
