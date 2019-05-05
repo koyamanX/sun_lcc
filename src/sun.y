@@ -394,14 +394,13 @@ reg: LOADU4(reg)  "add r%c,0(r%0)\n"  move(a)
 
 
 	//imm feild is not supported by assmbler
-reg: CVII4(reg)  "sll r%c,#8*(4-%a)(r%c)\nsra r%c,#8*(4-%a)(r%c)\n"  2
-reg: CVUI4(reg)  "and r%c,#(1<<(8*%a))-1(r%c)\n"  1
-reg: CVUU4(reg)  "and r%c,#(1<<(8*%a))-1(r%c)\n"  1
+reg:	CVII4(reg)  "sll r%c,8*(4-%a)(r0)\nsra r%c,8*(4-%a)(r0)\n"  2
+reg:	CVUI4(reg)  "sll r%c,8*(4-%a)(r0)\nsrl r%c,8*(4-%a)(r0)\n"  2
+reg:	CVUU4(reg)  "sll r%c,8*(4-%a)(r0)\nsrl r%c,8*(4-%a)(r0)\n"  2
 
 stmt: LABELV  "%a:\n"
 stmt: JUMPV(lab)  "b %0\n"   1
-//stmt: JUMPV(reg)   ".cpadd r%0\nj r%0\n"	 1
-stmt: JUMPV(reg)   "b 0(%0)\n"  			 1
+stmt: JUMPV(reg)   "b #0(r%0)\n"  			 1
 stmt: EQI4(reg,reg)  "cmp r0,r%0,r%1\nbeq %a\n"   2
 stmt: EQU4(reg,reg)  "cmp r0,r%0,r%1\nbeq %a\n"   2
 stmt: GEI4(reg,reg)  "cmp r0,r%0,r%1\nbge %a\n"   2
@@ -428,13 +427,16 @@ stmt: ARGB(INDIRB(reg))       "# argb %0\n"      1
 stmt: ASGNB(reg,INDIRB(reg))  "# asgnb %0 %1\n"  1
 
 	// call must be label !!
-reg:  CALLI4(ar)  "call %0\n"  1
-reg:  CALLP4(ar)  "call %0\n"  1
-reg:  CALLU4(ar)  "call %0\n"  1
-stmt: CALLV(ar)   "call %0\n"  1
-ar: ADDRGP4 "%a"
-//ar: addr "%0"
-//ar: CNSTP4 "%a" range(a, 0, 0x0ffffffff)
+reg:  CALLI4(lab)  "call %0\n"  1
+reg:  CALLP4(lab)  "call %0\n"  1
+reg:  CALLU4(lab)  "call %0\n"  1
+stmt: CALLV(lab)   "call %0\n"  1
+
+reg:  CALLI4(reg)  "call #0(r%0)\n"  1
+reg:  CALLP4(reg)  "call #0(r%0)\n"  1
+reg:  CALLU4(reg)  "call #0(r%0)\n"  1
+stmt: CALLV(reg)   "call #0(r%0)\n"  1
+
 %%
 
 /* 
@@ -855,14 +857,15 @@ static void target(Node p)
 			}
 			break;
 		case CALL+V:
-			rtarget(p, 0, ireg[30]);
+			rtarget(p, 0, ireg[10]);
 			break;
 		case CALL+I: case CALL+P: case CALL+U:
-			rtarget(p, 0, ireg[30]);
+			rtarget(p, 0, ireg[10]);
 			// assgin p to ireg[28]
 			setreg(p, ireg[28]);
 			break;
 		case RET+I: case RET+U: case RET+P:
+			/* return value in r28 */
 			rtarget(p, 0, ireg[28]);
 			break;
 		case ARG+I: case ARG+P: case ARG+U: {
