@@ -628,7 +628,7 @@ static void defconst(int suffix, int size, Value v)
 	else if (size == 1)
 		print(".byte 0x%x\n", (unsigned)((unsigned char)(suffix == I ? v.i : v.u)));
 	else if (size == 2)
-		print(".half 0x%x\n", (unsigned)((unsigned short)(suffix == I ? v.i : v.u)));
+		print(".hword 0x%x\n", (unsigned)((unsigned short)(suffix == I ? v.i : v.u)));
 	else if (size == 4)
 		print(".int 0x%x\n", (unsigned)(suffix == I ? v.i : v.u));
 }
