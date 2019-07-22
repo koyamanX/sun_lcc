@@ -733,7 +733,7 @@ static void blkloop(int dreg, int doff, int sreg, int soff, int size, int tmps[]
 	print("add r%d,#%d(%s)\n", sreg, -8, sreg);
 	print("add r%d,#%d(%s)\n", tmps[2], -8, tmps[2]);
 	blkcopy(tmps[2], doff, sreg, soff, 8, tmps);
-	print("cmp r%d, r%d\n", dreg, tmps[2]);
+	print("cmp r0, r%d, r%d\n", dreg, tmps[2]);
 	print("bult _%d\n", lab);
 }
 
