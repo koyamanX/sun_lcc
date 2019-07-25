@@ -16,11 +16,12 @@ static char rcsid[] = "$Id$";
 char *suffixes[] = { ".c", ".i", ".s", ".o", ".out", 0 };
 char inputs[256] = "";
 char *cpp[] = { 
-	CPPDIR"/"PREFIX"cpp",
+	/*CPPDIR"/"PREFIX"cpp",*/
+	"/usr/bin/cpp",
 	"-D__signed__=signed",
 	"-I",
 	"$1",
-       	"$2", 
+	"$2", 
 	"$3", 
 	0 
 };

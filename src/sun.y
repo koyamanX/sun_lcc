@@ -250,6 +250,7 @@ reg:  INDIRU2(VREGP)     "# read register\n"
 reg:  INDIRI4(VREGP)     "# read register\n"
 reg:  INDIRP4(VREGP)     "# read register\n"
 reg:  INDIRU4(VREGP)     "# read register\n"
+reg:  INDIRF4(VREGP)	 "# read register\n"
 
 stmt: ASGNI1(VREGP,reg)  "# write register\n"
 stmt: ASGNU1(VREGP,reg)  "# write register\n"
@@ -260,6 +261,7 @@ stmt: ASGNU2(VREGP,reg)  "# write register\n"
 stmt: ASGNI4(VREGP,reg)  "# write register\n"
 stmt: ASGNP4(VREGP,reg)  "# write register\n"
 stmt: ASGNU4(VREGP,reg)  "# write register\n"
+stmt: ASGNF4(VREGP,reg)	 "# write register\n"
 
 	// shared rules 
 	// ---- ----- 
@@ -311,14 +313,16 @@ stmt: ASGNU1(addr,reg) "sb r%1,%0\n" 1
 stmt: ASGNU2(addr,reg) "sh r%1,%0\n" 1
 stmt: ASGNU4(addr,reg) "sw r%1,%0\n" 1
 stmt: ASGNP4(addr,reg) "sw r%1,%0\n" 1
+stmt: ASGNF4(addr,reg) "sw r%1,%0\n"	100
 
-reg:  INDIRI1(addr)     "lb r%c,#%0\n"  1
-reg:  INDIRU1(addr)     "lbu r%c,#%0\n"  1
-reg:  INDIRI2(addr)     "lh r%c,#%0\n"  1
-reg:  INDIRU2(addr)     "lhu r%c,#%0\n"  1
-reg:  INDIRI4(addr)     "lw r%c,#%0\n"  1
-reg:  INDIRU4(addr)     "lw r%c,#%0\n"  1
-reg:  INDIRP4(addr)     "lw r%c,#%0\n"  1
+reg:  INDIRI1(addr)     "lb r%c,%0\n"  1
+reg:  INDIRU1(addr)     "lbu r%c,%0\n"  1
+reg:  INDIRI2(addr)     "lh r%c,%0\n"  1
+reg:  INDIRU2(addr)     "lhu r%c,%0\n"  1
+reg:  INDIRI4(addr)     "lw r%c,%0\n"  1
+reg:  INDIRU4(addr)     "lw r%c,%0\n"  1
+reg:  INDIRP4(addr)     "lw r%c,%0\n"  1
+reg:  INDIRF4(addr)		"lw r%c,%0\n"	100
 
 reg:  CVII4(INDIRI1(addr))     "lb r%c,#%0\n"  1
 reg:  CVII4(INDIRI2(addr))     "lh r%c,#%0\n"  1
@@ -419,9 +423,11 @@ stmt: RETI4(reg)  "# ret\n"  1
 stmt: RETU4(reg)  "# ret\n"  1
 stmt: RETP4(reg)  "# ret\n"  1
 stmt: RETV(reg)   "# ret\n"  1
+stmt: RETF4(reg)  "# ret\n"	 1
 stmt: ARGI4(reg)  "# arg\n"  1
 stmt: ARGP4(reg)  "# arg\n"  1
 stmt: ARGU4(reg)  "# arg\n"  1
+stmt: ARGF4(reg)  "# arg\n"	 1
 
 stmt: ARGB(INDIRB(reg))       "# argb %0\n"      1
 stmt: ASGNB(reg,INDIRB(reg))  "# asgnb %0 %1\n"  1
@@ -430,12 +436,33 @@ stmt: ASGNB(reg,INDIRB(reg))  "# asgnb %0 %1\n"  1
 reg:  CALLI4(lab)  "call %0\n"  1
 reg:  CALLP4(lab)  "call %0\n"  1
 reg:  CALLU4(lab)  "call %0\n"  1
+reg:  CALLF4(lab)  "call %0\n"  1
 stmt: CALLV(lab)   "call %0\n"  1
 
 reg:  CALLI4(reg)  "call #0(r%0)\n"  1
 reg:  CALLP4(reg)  "call #0(r%0)\n"  1
 reg:  CALLU4(reg)  "call #0(r%0)\n"  1
+reg:  CALLF4(reg)  "call #0(r%0)\n"  1
 stmt: CALLV(reg)   "call #0(r%0)\n"  1
+
+reg:  ADDF4(reg,reg) "call float32_add\n"	100
+reg:  SUBF4(reg,reg) "call float32_sub\n"	100
+reg:  MULF4(reg,reg) "call float32_mul\n"	100
+reg:  DIVF4(reg,reg) "call float32_div\n"	100 
+//reg:  LOADF4(reg)	 "add r%c,0(r%0)\n"	move(a)	
+reg:  NEGF4(reg)	 "call float32_neg\n"	100
+reg:  CVFF4(reg)	 ""	100
+reg:  CVIF4(reg)	 "call int32_to_float32\n"	100
+reg:  CVFI4(reg)	 "call float32_to_int32\n" 	100
+stmt: EQF4(reg,reg)	 "call float32_eq\n"   100
+stmt: LEF4(reg,reg)  "call float32_le\n"   100
+stmt: LTF4(reg,reg)  "call float32_lt\n"   100
+stmt: GEF4(reg,reg)  "call float32_ge\n"   100
+stmt: GTF4(reg,reg)  "call float32_gt\n"   100
+stmt: NEF4(reg,reg)	 "call float32_ne\n"   100
+
+
+
 
 %%
 
@@ -536,8 +563,7 @@ static void global(Symbol p)
 		{
 			print(".data\n");
 		}
-		//print(".align %c\n", ".01.2...3"[p->type->align]);
-		print(".align %c\n", '4');
+		print(".align %c\n", ".01.2...3"[p->type->align]);
 		print("%s:\n", p->x.name);
 	}
 
@@ -597,7 +623,6 @@ static void segment(int n)
 		case LIT:
 		case DATA:  print(".data\n"); break;
 	}
-	print(".align %c\n", '4');
 }
 
 /*
@@ -623,14 +648,17 @@ static void defaddress(Symbol p)
 */
 static void defconst(int suffix, int size, Value v) 
 {
+	float f = v.d;
 	if (suffix == P)
-		print(".int 0x%x\n", (unsigned)v.p);
+		print(".long 0x%x\n", (unsigned)v.p);
+	else if(suffix == F && size == 4) 
+		print(".long 0x%x\n", *(unsigned *) &f);
 	else if (size == 1)
 		print(".byte 0x%x\n", (unsigned)((unsigned char)(suffix == I ? v.i : v.u)));
 	else if (size == 2)
-		print(".hword 0x%x\n", (unsigned)((unsigned short)(suffix == I ? v.i : v.u)));
+		print(".word 0x%x\n", (unsigned)((unsigned short)(suffix == I ? v.i : v.u)));
 	else if (size == 4)
-		print(".int 0x%x\n", (unsigned)(suffix == I ? v.i : v.u));
+		print(".long 0x%x\n", (unsigned)(suffix == I ? v.i : v.u));
 }
 
 /*
@@ -661,6 +689,8 @@ static Symbol rmap(int opk)
 	switch (optype(opk)) {
         case I: case U: case P: case B:
                 return iregw;
+		case F:
+			return iregw;
         default:
                 return 0;
 	}
@@ -682,13 +712,9 @@ static void blkfetch(int size, int off, int reg, int tmp)
 
 	if(size == 1)
 		print("lbu r%d,#%d(%s)\n", tmp, off, regstr);
-	else if(salign >= size && size == 2)
-		print("lhu r%d,#%d(%s)\n", tmp, off, regstr);
-	else if(salign >= size)
-		print("lw r%d,#%d(%s)\n", tmp, off, regstr);
 	else if(size == 2)
 		print("lhu r%d,#%d(%s)\n", tmp, off, regstr);
-	else
+	else if(size == 4)
 		print("lw r%d,#%d(%s)\n", tmp, off, regstr);
 }
 
@@ -705,13 +731,9 @@ static void blkstore(int size, int off, int reg, int tmp)
 		regstr = stringf("r%d", reg);
 	if(size == 1)
 		print("sb r%d,#%d(%s)\n", tmp, off, regstr);
-	else if(dalign >= size && size == 2)
-		print("sh r%d,#%d(%s)\n", tmp, off, regstr);
-	else if(dalign >= size)
-		print("sw r%d,#%d(%s)\n", tmp, off, regstr);
 	else if(size == 2)
 		print("sh r%d,#%d(%s)\n", tmp, off, regstr);
-	else
+	else if(size == 4)
 		print("sw r%d,#%d(%s)\n", tmp, off, regstr);
 
 }
@@ -726,12 +748,12 @@ static void blkloop(int dreg, int doff, int sreg, int soff, int size, int tmps[]
 {
 	int lab = genlabel(1);
 
-	print("add r%d,#%d(%s)\n", sreg, size&~7, sreg);
-	print("add r%d,#%d(%s)\n", tmps[2], size&~7, dreg);
+	print("add r%d,#%d(r%d)\n", sreg, size&~7, sreg);
+	print("add r%d,#%d(r%d)\n", tmps[2], size&~7, dreg);
 	blkcopy(tmps[2], doff, sreg, soff, size&7, tmps);
-	print("_%d\n", lab);
-	print("add r%d,#%d(%s)\n", sreg, -8, sreg);
-	print("add r%d,#%d(%s)\n", tmps[2], -8, tmps[2]);
+	print("_%d:\n", lab);
+	print("add r%d,#%d(r%d)\n", sreg, -8, sreg);
+	print("add r%d,#%d(r%d)\n", tmps[2], -8, tmps[2]);
 	blkcopy(tmps[2], doff, sreg, soff, 8, tmps);
 	print("cmp r0, r%d, r%d\n", dreg, tmps[2]);
 	print("bult _%d\n", lab);
@@ -777,6 +799,7 @@ static void emit2(Node p)
 		case ARG+I:
 		case ARG+P:
 		case ARG+U:
+		case ARG+F:
 			ty = optype(p->op);
 			sz = opsize(p->op);
 			if(p->x.argno == 0)
@@ -864,11 +887,18 @@ static void target(Node p)
 			// assgin p to ireg[28]
 			setreg(p, ireg[28]);
 			break;
+		case CALL+F:
+			rtarget(p, 0, ireg[10]);
+			setreg(p, ireg[28]);
+			break;
 		case RET+I: case RET+U: case RET+P:
 			/* return value in r28 */
 			rtarget(p, 0, ireg[28]);
 			break;
-		case ARG+I: case ARG+P: case ARG+U: {
+		case RET+F:
+        	rtarget(p, 0, ireg[28]);
+			break;
+		case ARG+I: case ARG+P: case ARG+U: case ARG+F: {
 			static int ty0;
 			int ty = optype(p->op);
 			Symbol q;
@@ -884,6 +914,27 @@ static void target(Node p)
 		}
 		case ASGN+B: rtarget(p->kids[1], 0, blkreg); break;
 		case ARG+B:  rtarget(p->kids[0], 0, blkreg); break;
+		case DIV+F:
+		case MOD+F:
+		case MUL+F:
+		case ADD+F:
+		case SUB+F:
+		case EQ+F:
+		case NE+F:
+		case LE+F:
+		case LT+F:
+		case GT+F:
+		case GE+F: 
+		  setreg (p, ireg[28]);
+		  rtarget (p, 0, ireg[20]);
+		  rtarget (p, 1, ireg[21]);
+		  break;
+		case NEG+F:
+		case CVI+F:
+		case CVF+I:
+		  setreg (p, ireg[28]);
+		  rtarget (p, 0, ireg[20]);
+		  break;
 	}
 }
 
@@ -902,6 +953,25 @@ static void clobber(Node p)
 		case CALL+V:
 			spill(INTTMP | INTRET, IREG, p);
 			break;
+		case CALL+F:
+			spill(INTTMP, IREG, p);      
+			break;
+		case ADD+F:
+		case SUB+F:
+		case NEG+F:
+		case DIV+F:
+		case MOD+F:
+		case MUL+F:
+		case EQ+F:
+		case NE+F:
+		case LE+F:
+		case LT+F:
+		case GT+F:
+		case GE+F:
+		case CVI+F:
+		case CVF+I:
+			spill(INTTMP, IREG, p);      
+			break;      
 	}
 }
 
