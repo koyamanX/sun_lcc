@@ -1150,8 +1150,8 @@ Interface sunIR = {
         4, 4, 0,  /* long */
         4, 4, 0,  /* long long */
         4, 4, 1,  /* float */
-        8, 8, 1,  /* double */
-        8, 8, 1,  /* long double */
+        4, 4, 1,  /* double */
+        4, 4, 1,  /* long double */
         4, 4, 0,  /* T * */
         0, 1, 0,  /* struct */
         0,      /* little_endian */
