@@ -399,9 +399,9 @@ reg: LOADU4(reg)  "add r%c,0(r%0)\n"  move(a)
 
 
 	//imm feild is not supported by assmbler
-reg:	CVII4(reg)  "sll r%c,8*(4-%a)(r0)\nsra r%c,8*(4-%a)(r%c)\n"  2
-reg:	CVUI4(reg)  "sll r%c,8*(4-%a)(r0)\nsrl r%c,8*(4-%a)(r%c)\n"  2
-reg:	CVUU4(reg)  "sll r%c,8*(4-%a)(r0)\nsrl r%c,8*(4-%a)(r%c)\n"  2
+reg:	CVII4(reg)  "sll r%c,8*(4-%a)(r%0)\nsra r%c,8*(4-%a)(r%c)\n"  2
+reg:	CVUI4(reg)  "sll r%c,8*(4-%a)(r%0)\nsrl r%c,8*(4-%a)(r%c)\n"  2
+reg:	CVUU4(reg)  "sll r%c,8*(4-%a)(r%0)\nsrl r%c,8*(4-%a)(r%c)\n"  2
 
 stmt: LABELV  "%a:\n"
 stmt: JUMPV(lab)  "b %0\n"   1
