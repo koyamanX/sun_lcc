@@ -5,12 +5,12 @@
 static char rcsid[] = "$Id$";
 
 //#define CPPDIR LCCDIR"/"PREFIX"/"
-#define INSTDIR "/opt/sun32_toolchain"
-#define CPPDIR INSTDIR"/lcc/bin"
-#define BINUTILSDIR  INSTDIR"/binutils/bin"
-#define LCCDIR INSTDIR"/lcc/bin"
-#define LIBDIR INSTDIR"/lib/lcc"
-#define INCDIR INSTDIR"/lib/include"
+#define INSTDIR "/opt/sun32"
+#define CPPDIR INSTDIR"/bin"
+#define BINUTILSDIR  INSTDIR"/bin"
+#define LCCDIR INSTDIR"/bin"
+#define LIBDIR INSTDIR"/lib/"
+#define INCDIR INSTDIR"/include"
 #define PREFIX "sun32-unknown-elf-"
 
 char *suffixes[] = { ".c", ".i", ".s", ".o", ".out", 0 };
