@@ -18,10 +18,12 @@ T=$(TSTDIR)/
 
 HOSTFILE=etc/linux.c
 BUILDDIR=./build
+P=sun32-unknown-elf-
+I=/opt/sun32/bin
 
 
 what:
-	-@echo make all rcc lburg cpp lcc bprint liblcc triple clean clobber
+	-@echo make all rcc lburg cpp lcc bprint liblcc triple clean clobber install
 
 all::	rcc lburg cpp lcc bprint liblcc
 
@@ -286,3 +288,9 @@ $B1rcc$E:	$Brcc$E $Blcc$E $Bcpp$E
 		$C -o $@ -B$B $(RCCSRCS)
 $B2rcc$E:	$B1rcc$E
 		$C -o $@ -B$B1 $(RCCSRCS)
+install: rcc lburg cpp lcc bprint liblcc
+	cp $B/rcc $I/$Prcc
+	cp $B/lcc $I/$Plcc
+	cp $B/cpp $I/$Pcpp
+
+
