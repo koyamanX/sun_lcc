@@ -228,6 +228,7 @@ static int cseg;
 %term LABELV=600
 
 %term LOADB=233
+%term LOADF4=4321
 %term LOADI1=1253
 %term LOADI2=2277
 %term LOADI4=4325
@@ -398,9 +399,9 @@ reg: LOADU4(reg)  "add r%c,0(r%0)\n"  move(a)
 
 
 	//imm feild is not supported by assmbler
-reg:	CVII4(reg)  "sll r%c,8*(4-%a)(r0)\nsra r%c,8*(4-%a)(r0)\n"  2
-reg:	CVUI4(reg)  "sll r%c,8*(4-%a)(r0)\nsrl r%c,8*(4-%a)(r0)\n"  2
-reg:	CVUU4(reg)  "sll r%c,8*(4-%a)(r0)\nsrl r%c,8*(4-%a)(r0)\n"  2
+reg:	CVII4(reg)  "sll r%c,8*(4-%a)(r%0)\nsra r%c,8*(4-%a)(r%c)\n"  2
+reg:	CVUI4(reg)  "sll r%c,8*(4-%a)(r%0)\nsrl r%c,8*(4-%a)(r%c)\n"  2
+reg:	CVUU4(reg)  "sll r%c,8*(4-%a)(r%0)\nsrl r%c,8*(4-%a)(r%c)\n"  2
 
 stmt: LABELV  "%a:\n"
 stmt: JUMPV(lab)  "b %0\n"   1
@@ -449,7 +450,7 @@ reg:  ADDF4(reg,reg) "call float32_add\n"	100
 reg:  SUBF4(reg,reg) "call float32_sub\n"	100
 reg:  MULF4(reg,reg) "call float32_mul\n"	100
 reg:  DIVF4(reg,reg) "call float32_div\n"	100 
-//reg:  LOADF4(reg)	 "add r%c,0(r%0)\n"	move(a)	
+reg:  LOADF4(reg)	 "add r%c,0(r%0)\n"	move(a)	
 reg:  NEGF4(reg)	 "call float32_neg\n"	100
 reg:  CVFF4(reg)	 ""	100
 reg:  CVIF4(reg)	 "call int32_to_float32\n"	100
