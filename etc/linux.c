@@ -58,7 +58,7 @@ extern char *concat(char *, char *);
 
 int option(char *arg) {
 	if(strcmp(arg, "-T") == 0) {
-		ld[3] = concat("-T ", &arg[4]);
+		ld[3] = concat("-T ", &arg[2]);
 	} else {
 		return 0;
 	}
